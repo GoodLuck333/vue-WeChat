@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		<style type="text/css">
+			.edit{
+				margin-left: 91px;
+			}
+			.del{
+				margin-left: 30px;
+			}
+			.go{
+				margin-left: 90px;
+			}
+			.save{
+				display: none;
+				margin-left: 30px;
+			}
+			.cancel{
+				display: none;
+				margin-left: 30px;
+			}
+			.headImg{
+				height: 100px;
+				border-radius: 3%;
+			}
+		</style>
+	</head>
+	<body>
+		<p></p>	
+		<div>
+			<label>手机号：</label>
+			<input class="tel" type="text" />
+		</div>
+		<div>
+			<label>用户名：</label>
+			<input class="user" type="text" />
+		</div>
+		<div>
+			<label>密　码：</label>
+			<input class="password" type="text" />
+		</div>
+		<div>
+			<label>姓　名：</label>
+			<input class="name" type="text" />
+		</div>
+		<div>
+			<label>班　级：</label>
+			<input class="class" type="text" />
+		</div>
+		<div>
+			<label>头　像：</label>
+			<input class="headUrl" type="text" />
+		</div>
+		<div>
+			<label>备　注：</label>
+			<input class="remark" type="text" />
+		</div>
+		<div>
+			<label>性　别：</label>
+			<select class="sex">
+				<option selected>男</option>
+				<option>女</option>
+			</select>
+		</div>
+		<input class="go" type="button" value="添加用户" />
+		<input class="save" type="button" value="保　　存" />
+		<input class="cancel" type="button" value="取　　消" />
+		<script type="text/javascript">
+			(function () {
+				var result = null;
+				
+				var url = 'http://0.0.0.0:8890/'
+				
+				//初始化
+				init();
+				
+				//点击按钮添加数据
+				$('.go').on('click', function () {
+					submitData();
+				});
+				
+				//回车添加数据
+				$(':text').keydown(function(e){
+					if(e.keyCode==13){
+					   submitData();
+					}
+				});
+				
+				//初始化方法
+				function init () {
+					$('.tel')[0].focus();
+					$.ajax({
+						type:"get",
+						url: url + "user/searchAll",
+						async:true,
+						data: {search: ''},
+						success: function (res) {
+							result = res.data;
+							console.log(res);
+							var str = '';
+							for (var i = 0; i < res.data.length; i++) {
+								str += '学　　号：' + res.data[i].id + '<br />';
+								str += '手　　机：' + res.data[i].tel + '<br />';
+								str += '&nbsp;用  户  名：' + res.data[i].user + '<br />';
+								str += '密　　码：' + res.data[i].password + '<br />';
+								str += '班　　级：' + res.data[i].class + '<br />';
+								str += '姓　　名：' + res.data[i].name + '<br />';
+								str += '性　　别：' + res.data[i].sex + '<button class="edit">编辑</button><br />';
+								str += '头　　像：<img class="headImg" src=' + res.data[i].headUrl + ' /><br />';
+								str += '添加时间：' + res.data[i].addtime + '<button class="del">删除</button><br /><br />';
+							}
+							$('p').html(str);
+							
+							//编辑事件
+							$('.edit').on('click', function () {
+								$('.go').hide();
+								$('.save').show();
+								$('.cancel').show();
+								$('.tel').val(result[$('.edit').index(this)].tel);
+								$('.user').val(result[$('.edit').index(this)].user);
+								$('.password').val(result[$('.edit').index(this)].password);
+								$('.name').val(result[$('.edit').index(this)].name);
+								$('.class').val(result[$('.edit').index(this)].class);
+								$('.headUrl').val(result[$('.edit').index(this)].headUrl);
+								$('.remark').val(result[$('.edit').index(this)].remark);
+								$('.sex').val(result[$('.edit').index(this)].sex);
+							});
+							
+							//数据更新事件
+							$('.save').on('click', function () {
+								if (testTel($('.tel').val())) {
+									$.ajax({
+										type:"get",
+										url: url + "user/update",
+										async:true,
+										data: {
+											tel: $('.tel').val(),
+											user: $('.user').val(),
+											password: $('.password').val(),
+											name: $('.name').val(),
+											class: $('.class').val(),
+											sex: $('.sex option:selected').val(),
+											headUrl: $('.headUrl').val(),
+											remark: $('.remark').val()
+											},
+										success: function (res) {
+											console.log(res)
+											alert(res.data.proInfo);
+											window.location.reload();
+										}
+									});
+									$('.go').show();
+									$('.cancel').hide();
+									initInputText();
+									$(this).hide();
+								}
+							})
+							
+							//取消事件
+							$('.cancel').on('click', function () {
+								$('.go').show();
+								$('.save').hide();
+								initInputText();
+								$(this).hide();
+							})
+							
+							//添加删除事件
+							$('.del').on('click', function () {
+//								console.log($('.del').index(this))
+								console.log(result[$('.del').index(this)].tel)
+								$.ajax({
+									type:"get",
+									url: url + "user/delete",
+									async:true,
+									data: {tel: result[$('.del').index(this)].tel},
+									success: function (res) {
+										console.log(res);
+										alert(res.data.proInfo);
+										init();
+									}
+								});
+							})
+						}
+					});
+				}
+				
+				//正则手机号
+				function testTel (tel) {
+					if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(tel))){
+						if (tel === '') {
+							alert('手机号不能为空！');
+							return false;
+						}
+						console.log(tel)
+						alert('请正确填写手机号！');
+						return false;
+					}
+					return true;
+				}
+				
+				//提交添加数据
+				function submitData () {
+					console.log($('.tel').val());
+					if (testTel($('.tel').val())) {
+						$.ajax({
+							type:"get",
+							url: url + "user/insert",
+							async:true,
+							data: {
+								tel: $('.tel').val(),
+								user: $('.user').val(),
+								password: $('.password').val(),
+								name: $('.name').val(),
+								class: $('.class').val(),
+								sex: $('.sex option:selected').val(),
+								headUrl: $('.headUrl').val(),
+								remark: $('.remark').val(),
+								},
+							success: function (res) {
+								console.log(res)
+								alert(res.data.proInfo);
+								window.location.reload();
+							}
+						});
+					}
+				}
+				
+				//初始化文本框内容
+				function initInputText () {
+					$(':text').val('');
+					$('.sex').val('男');
+				}
+				
+			})()
+		</script>
+	</body>
+</html>
