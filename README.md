@@ -48,14 +48,35 @@
 >## Run the project
 
 　　nodeMysql：node app.js
-  
+  
 　　realtime-server/server：node index.js
-  
+  
 　　weChat：npm run dev
+  
+>## login
 
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/login.png)
 
+>## login success
 
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/loginSuccess.png)
 
+>## can not Chat
 
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/canNotChat.png)
 
+>## online
 
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/online.png)
+
+>## chat
+
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/chat.png)
+
+>## dataManagement1
+
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/nodeMysql1.png)
+
+>## dataManagement2
+
+![image](https://raw.githubusercontent.com/GoodLuck333/vue-WeChat/master/other/nodeMysql2.png)
