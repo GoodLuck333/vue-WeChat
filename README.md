@@ -29,6 +29,8 @@
   
 * weChat使用vue做前台展示;
 
+* dataManagementPage数据管理页;
+
 >## Download dependencies
 
 　　npm install -i
@@ -40,7 +42,9 @@
 * weChat/src/fetch/api.js 设置url为nodeMysql中的接口地址;
   
 * weChat/src/components/chat.vue 设置socket为realtime-server中的socket服务地址;
-  
+
+* dataManagementPage/nodeMysql.html 设置url为nodeMysql中的接口地址;
+  
 >## Run the project
 
 　　nodeMysql：node app.js
